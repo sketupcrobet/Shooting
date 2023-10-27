@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Interactable : MonoBehaviour
 {
@@ -78,7 +79,18 @@ public class Interactable : MonoBehaviour
 		}
 		else if (InteractType == "Box")
 		{
-
+			if (transform.GetChild(1).GetChild(0).GetChild(0).childCount == 0)
+			{
+				for (int i = 0; i < 50; i++)
+				{
+					GameObject temp = Instantiate(Resources.Load("Prefabs/ItemSlot") as GameObject);
+					temp.GetComponent<Image>().color = new Color(0, 0, Random.Range(0, 256) / 255f);
+					temp.transform.SetParent(transform.GetChild(1).GetChild(0).GetChild(0));
+					temp.transform.localScale = Vector3.one;
+				}
+			}
+			transform.GetChild(1).gameObject.SetActive(true);
+			GM.UIOpen = true;
 		}
 		else
 		{
@@ -112,5 +124,11 @@ public class Interactable : MonoBehaviour
 			Debug.Log("µµ³¢°¡ ¾ø´Ù");
 			return false;
 		}
+	}
+
+	public void UIClose()
+	{
+		transform.GetChild(1).gameObject.SetActive(false);
+		GM.UIOpen = false;
 	}
 }

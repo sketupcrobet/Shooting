@@ -11,6 +11,7 @@ public class Player : MonoBehaviour
 	public GameObject InteractObj;
 	[SerializeField] private GameObject Bullet;
 	[SerializeField] private WeaponData WeaponData;
+	private GameManager GM;
 
 	public float test1;
 	public bool test2;
@@ -18,6 +19,7 @@ public class Player : MonoBehaviour
 	void Start()
 	{
 		StartCoroutine("AttackCycle");
+		GM = GameObject.Find("GameManager").GetComponent<GameManager>();
 	}
 
 	void Update()
@@ -30,7 +32,7 @@ public class Player : MonoBehaviour
 	{
 		while (true)
 		{
-			if (Input.GetMouseButton(0))
+			if (Input.GetMouseButton(0) && !GM.UIOpen)
 			{
 				GameObject temp = Instantiate(Bullet, transform.Find("Gun").position, transform.rotation);
 				//temp.transform.SetParent(GameObject.Find("Canvas").transform);
@@ -50,14 +52,23 @@ public class Player : MonoBehaviour
 
 	private void Move()
 	{
-		Vector3 mPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-		Vector3 oPosition = transform.position;
-		transform.rotation = Quaternion.Euler(0, 0, Mathf.Atan2(mPosition.y - oPosition.y, mPosition.x - oPosition.x) * Mathf.Rad2Deg);
-		transform.GetChild(1).localRotation = Quaternion.Euler(0, 0, -Mathf.Atan2(mPosition.y - oPosition.y, mPosition.x - oPosition.x) * Mathf.Rad2Deg);
+		float MoveX;
+		float MoveY;
+		if (!GM.UIOpen)
+		{
+			Vector3 mPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+			Vector3 oPosition = transform.position;
+			transform.rotation = Quaternion.Euler(0, 0, Mathf.Atan2(mPosition.y - oPosition.y, mPosition.x - oPosition.x) * Mathf.Rad2Deg);
+			transform.GetChild(1).localRotation = Quaternion.Euler(0, 0, -Mathf.Atan2(mPosition.y - oPosition.y, mPosition.x - oPosition.x) * Mathf.Rad2Deg);
 
-		float MoveX = Input.GetAxisRaw("Horizontal");
-		float MoveY = Input.GetAxisRaw("Vertical");
-
+			MoveX = Input.GetAxisRaw("Horizontal");
+			MoveY = Input.GetAxisRaw("Vertical");
+		}
+		else
+		{
+			MoveX = 0;
+			MoveY = 0;
+		}
 		transform.GetComponent<Rigidbody2D>().velocity = new Vector3(MoveX * Speed, MoveY * Speed, 0);
 	}
 
