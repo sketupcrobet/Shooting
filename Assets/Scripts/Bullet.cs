@@ -25,8 +25,7 @@ public class Bullet : MonoBehaviour
 		Vector3 LaterPosition = transform.position;
 		if (Range / BSPD < Time.time - StartTime)
 		{
-			Debug.Log("°Å");
-			//Destroy(gameObject);
+			Destroy(gameObject);
 		}
 
 		LayerMask MyLayermask = (1 << 7) | (1 << 8);
@@ -43,7 +42,6 @@ public class Bullet : MonoBehaviour
 			{
 				ALLHitz[0].collider.GetComponent<Enemy>().Health -= DMG;
 			}
-			Debug.Log("Àû");
 			Destroy(gameObject);
 		}
 	}

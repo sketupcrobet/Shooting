@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor.Tilemaps;
 using UnityEngine;
 
 public class Enemy : MonoBehaviour
@@ -17,6 +18,10 @@ public class Enemy : MonoBehaviour
 
 	[SerializeField] private WeaponData WeaponData;
 	private bool isPlayer;
+
+	public int MoveType;
+
+	IEnumerator test;
 
 	void Start()
 	{
@@ -64,6 +69,9 @@ public class Enemy : MonoBehaviour
 	private void ResetPos()
 	{
 		endPos = new Vector2(startPos.x + Random.Range(-moveRange, moveRange), startPos.y + Random.Range(-moveRange, moveRange));
+		Vector3 myloc = transform.position;
+		Vector3 targetloc = new Vector2(startPos.x + Random.Range(-moveRange, moveRange), startPos.y + Random.Range(-moveRange, moveRange));
+		transform.rotation = Quaternion.Euler(0, 0, Mathf.Atan2(targetloc.y - myloc.y, targetloc.x - myloc.x) * Mathf.Rad2Deg);
 		isreset = true;
 	}
 
@@ -71,23 +79,39 @@ public class Enemy : MonoBehaviour
 	{
 		if (moveOn)
 		{
-			if (gameObject.transform.position == endPos)
+			if (MoveType == 0)
 			{
+				if (transform.position == endPos)
+				{
+					if (isreset == true)
+					{
+						isreset = false;
+						StartCoroutine(ResetCoroutine());
+					}
+				}
+				if (transform.position.x < endPos.x)
+				{
+					GetComponent<SpriteRenderer>().flipX = true;
+				}
+				else if (transform.position.x > endPos.x)
+				{
+					GetComponent<SpriteRenderer>().flipX = false;
+				}
+				//transform.position = Vector2.MoveTowards(transform.position, endPos, moveSpeed * Time.deltaTime);
 				if (isreset == true)
 				{
-					isreset = false;
-					StartCoroutine(ResetCoroutine());
+					transform.position += (transform.right * moveSpeed * Time.deltaTime);
 				}
 			}
-			if (gameObject.transform.position.x < endPos.x)
+			else if (MoveType == 1)
 			{
-				gameObject.GetComponent<SpriteRenderer>().flipX = true;
+				GameObject PL = GameObject.Find("Player");
+				Vector3 myloc = transform.position;
+				Vector3 targetloc = PL.transform.position;
+				transform.rotation = Quaternion.Euler(0, 0, Mathf.Atan2(targetloc.y - myloc.y, targetloc.x - myloc.x) * Mathf.Rad2Deg);
+				//transform.position = Vector2.MoveTowards(myloc, targetloc, moveSpeed * Time.deltaTime);
+				transform.position += (transform.right * moveSpeed * Time.deltaTime);
 			}
-			else if (gameObject.transform.position.x > endPos.x)
-			{
-				gameObject.GetComponent<SpriteRenderer>().flipX = false;
-			}
-			gameObject.transform.position = Vector2.MoveTowards(gameObject.transform.position, endPos, moveSpeed * Time.deltaTime);
 		}
 	}
 
@@ -103,10 +127,20 @@ public class Enemy : MonoBehaviour
 	{
 		if (collision.tag == "Player")
 		{
-			Vector3 mPosition = collision.transform.position;
-			Vector3 oPosition = transform.position;
-			transform.rotation = Quaternion.Euler(0, 0, Mathf.Atan2(mPosition.y - oPosition.y, mPosition.x - oPosition.x) * Mathf.Rad2Deg);
-			isPlayer = true;
+			StopCoroutine(test);
+			Vector3 myloc = transform.position;
+			Vector3 targetloc = collision.transform.position;
+			transform.rotation = Quaternion.Euler(0, 0, Mathf.Atan2(targetloc.y - myloc.y, targetloc.x - myloc.x) * Mathf.Rad2Deg);
+			MoveType = 1;
+			transform.GetChild(0).GetComponent<CircleCollider2D>().radius = 10;
+			if (Vector3.Distance(myloc, targetloc) <= 5)
+			{
+				isPlayer = true;
+			}
+			else
+			{
+				isPlayer = false;
+			}
 		}
 	}
 
@@ -114,8 +148,15 @@ public class Enemy : MonoBehaviour
 	{
 		if (collision.tag == "Player")
 		{
-			isPlayer = false;
+			test = ResetChase();
+			StartCoroutine(test);
 		}
+	}
+
+	IEnumerator ResetChase()
+	{
+		yield return new WaitForSeconds(10);
+		MoveType = 0;
 	}
 
 #if UNITY_EDITOR
