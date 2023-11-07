@@ -1,15 +1,12 @@
-using JetBrains.Annotations;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UIElements;
 
 public class Player : MonoBehaviour
 {
 	public float Speed;
 	private int InteractCount;
-	public GameObject InteractObj;
-	[SerializeField] private GameObject Bullet;
+	private GameObject InteractObj;
 	[SerializeField] private WeaponData WeaponData;
 	private GameManager GM;
 
@@ -34,9 +31,7 @@ public class Player : MonoBehaviour
 		{
 			if (Input.GetMouseButton(0) && !GM.UIOpen)
 			{
-				GameObject temp = Instantiate(Bullet, transform.Find("Gun").position, transform.rotation);
-				//temp.transform.SetParent(GameObject.Find("Canvas").transform);
-				//temp.transform.localScale = Vector3.one;
+				GameObject temp = Instantiate(Resources.Load("Prefabs/Bullet") as GameObject, transform.Find("Gun").position, transform.rotation);
 				temp.GetComponent<Bullet>().DMG = WeaponData.DMG;
 				temp.GetComponent<Bullet>().BSPD = WeaponData.BSPD;
 				temp.GetComponent<Bullet>().Range = WeaponData.Range;
@@ -59,7 +54,7 @@ public class Player : MonoBehaviour
 			Vector3 mPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
 			Vector3 oPosition = transform.position;
 			transform.rotation = Quaternion.Euler(0, 0, Mathf.Atan2(mPosition.y - oPosition.y, mPosition.x - oPosition.x) * Mathf.Rad2Deg);
-			transform.GetChild(1).localRotation = Quaternion.Euler(0, 0, -Mathf.Atan2(mPosition.y - oPosition.y, mPosition.x - oPosition.x) * Mathf.Rad2Deg);
+			transform.Find("Main Camera").localRotation = Quaternion.Euler(0, 0, -Mathf.Atan2(mPosition.y - oPosition.y, mPosition.x - oPosition.x) * Mathf.Rad2Deg);
 
 			MoveX = Input.GetAxisRaw("Horizontal");
 			MoveY = Input.GetAxisRaw("Vertical");

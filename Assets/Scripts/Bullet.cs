@@ -1,6 +1,5 @@
 using System.Collections;
 using System.Collections.Generic;
-using System.Runtime.CompilerServices;
 using UnityEngine;
 
 public class Bullet : MonoBehaviour
@@ -26,10 +25,11 @@ public class Bullet : MonoBehaviour
 		Vector3 LaterPosition = transform.position;
 		if (Range / BSPD < Time.time - StartTime)
 		{
-			Destroy(gameObject);
+			Debug.Log("°Å");
+			//Destroy(gameObject);
 		}
 
-		LayerMask MyLayermask = (1 << 6) | (1 << 7);
+		LayerMask MyLayermask = (1 << 7) | (1 << 8);
 
 		RaycastHit2D[] ALLHitz = Physics2D.RaycastAll(CurrentPostion, transform.right, Vector3.Distance(CurrentPostion, LaterPosition), MyLayermask);
 		for (int i = 0; i < ALLHitz.Length; i++)
@@ -43,6 +43,7 @@ public class Bullet : MonoBehaviour
 			{
 				ALLHitz[0].collider.GetComponent<Enemy>().Health -= DMG;
 			}
+			Debug.Log("Àû");
 			Destroy(gameObject);
 		}
 	}
