@@ -53,3 +53,5 @@ MonoBehaviour:
   BSPD: 3000
   range: 10000
   PEN: 2
+  MaxAmmo: 5
+  ReloadTime: 10

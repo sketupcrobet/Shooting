@@ -11,7 +11,9 @@ public class GameManager : MonoBehaviour
 	public bool havePickAxe;
 	public bool haveAxe;
 
-	float deltaTime = 0.0f;
+	private float deltaTime = 0.0f;
+
+	public GameObject closeObj;
 
 	void Start()
 	{

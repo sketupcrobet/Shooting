@@ -51,7 +51,7 @@ public class Enemy : MonoBehaviour
 		{
 			if (isPlayer)
 			{
-				GameObject temp = Instantiate(Resources.Load("Prefabs/Bullet") as GameObject, transform.Find("Gun").position, transform.rotation);
+				GameObject temp = Instantiate(Resources.Load<GameObject>("Prefabs/Bullet"), transform.Find("Gun").position, transform.rotation);
 				temp.GetComponent<Bullet>().DMG = weaponData.DMG;
 				temp.GetComponent<Bullet>().BSPD = weaponData.BSPD;
 				temp.GetComponent<Bullet>().range = weaponData.range;

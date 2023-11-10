@@ -15,28 +15,12 @@ public class Interactable : MonoBehaviour
 	{
 		GM = GameObject.Find("GameManager").GetComponent<GameManager>();
 		PL = GameObject.Find("Player");
-		interactNotice = transform.GetChild(0).gameObject;
+		//interactNotice = transform.GetChild(0).gameObject;
 	}
 
 	void Update()
 	{
 
-	}
-
-	private void OnTriggerEnter2D(Collider2D collision)
-	{
-		if (collision.tag == "Player")
-		{
-			interactNotice.gameObject.SetActive(true);
-		}
-	}
-
-	private void OnTriggerExit2D(Collider2D collision)
-	{
-		if (collision.tag == "Player")
-		{
-			interactNotice.gameObject.SetActive(false);
-		}
 	}
 
 	public void Interact()
@@ -84,18 +68,20 @@ public class Interactable : MonoBehaviour
 		else if (interactType == "Box")
 		{
 			int maxCount = 24;
-			if (transform.GetChild(1).GetChild(1).childCount != maxCount)
+			Transform Inventory = transform.Find("Canvas").Find("Inventory").Find("Inventory");
+			if (Inventory.childCount != maxCount)
 			{
 				for (int i = 0; i < maxCount; i++)
 				{
-					GameObject itemSlot = Instantiate(Resources.Load("Prefabs/ItemSlot") as GameObject);
-					itemSlot.GetComponent<Image>().color = new Color(0, 0, Random.Range(0, 256) / 255f);
-					itemSlot.transform.SetParent(transform.GetChild(1).GetChild(1));
+					GameObject itemSlot = Instantiate(Resources.Load<GameObject>("Prefabs/ItemSlot"));
+					itemSlot.transform.GetChild(0).GetComponent<Image>().sprite = Resources.Load<Sprite>("Item/" + Random.Range(0, 25));
+					itemSlot.transform.SetParent(Inventory);
 					itemSlot.transform.localScale = Vector3.one;
 				}
 			}
-			transform.GetChild(1).gameObject.SetActive(true);
-			PL.transform.GetChild(2).gameObject.SetActive(true);
+			transform.Find("Canvas").Find("Inventory").gameObject.SetActive(true);
+			PL.transform.Find("Canvas").Find("Inventory").gameObject.SetActive(true);
+			GM.closeObj = transform.Find("Canvas").Find("Inventory").Find("Name").Find("Close").gameObject;
 			GM.UIOpen = true;
 		}
 		else
@@ -134,8 +120,9 @@ public class Interactable : MonoBehaviour
 
 	public void UIClose()
 	{
-		EventSystem.current.currentSelectedGameObject.transform.parent.gameObject.SetActive(false);
-		PL.transform.GetChild(2).gameObject.SetActive(false);
+		//EventSystem.current.currentSelectedGameObject.transform.parent.gameObject.SetActive(false);
+		GM.closeObj.transform.parent.parent.gameObject.SetActive(false);
+		PL.transform.Find("Canvas").Find("Inventory").gameObject.SetActive(false);
 		GM.UIOpen = false;
 	}
 }

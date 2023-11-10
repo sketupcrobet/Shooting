@@ -9,6 +9,8 @@ public class WeaponData : MonoBehaviour
 	public float BSPD;
 	public float range;
 	public float PEN;
+	public int MaxAmmo;
+	public float ReloadTime;
 
 	void Start()
 	{
