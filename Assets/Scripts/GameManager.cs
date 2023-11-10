@@ -5,11 +5,11 @@ using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
-	public bool DebugMod;
+	public bool debugMod;
 	public bool UIOpen;
 
-	public bool HavePickAxe;
-	public bool HaveAxe;
+	public bool havePickAxe;
+	public bool haveAxe;
 
 	float deltaTime = 0.0f;
 
@@ -24,7 +24,7 @@ public class GameManager : MonoBehaviour
 	void Update()
 	{
 		deltaTime += (Time.unscaledDeltaTime - deltaTime) * 0.1f;
-		if (DebugMod)
+		if (debugMod)
 		{
 			if (Input.GetKeyDown(KeyCode.E))
 			{

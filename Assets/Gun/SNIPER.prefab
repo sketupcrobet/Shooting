@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 4807764488688221700}
   - component: {fileID: 3993402431058430438}
   m_Layer: 5
-  m_Name: GUN1
+  m_Name: SNIPER
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -48,8 +48,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 066a12819cacff04292c7bbb64691a53, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  DMG: 10
-  RPM: 600
+  DMG: 50
+  RPM: 60
   BSPD: 3000
-  Range: 3000
+  range: 10000
   PEN: 2

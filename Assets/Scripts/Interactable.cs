@@ -1,17 +1,21 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 public class Interactable : MonoBehaviour
 {
-	public string InteractType;
-	[SerializeField] private GameObject InteractNotice;
+	public string interactType;
+	private GameObject interactNotice;
 	private GameManager GM;
+	private GameObject PL;
 
 	void Start()
 	{
 		GM = GameObject.Find("GameManager").GetComponent<GameManager>();
+		PL = GameObject.Find("Player");
+		interactNotice = transform.GetChild(0).gameObject;
 	}
 
 	void Update()
@@ -23,7 +27,7 @@ public class Interactable : MonoBehaviour
 	{
 		if (collision.tag == "Player")
 		{
-			InteractNotice.gameObject.SetActive(true);
+			interactNotice.gameObject.SetActive(true);
 		}
 	}
 
@@ -31,29 +35,29 @@ public class Interactable : MonoBehaviour
 	{
 		if (collision.tag == "Player")
 		{
-			InteractNotice.gameObject.SetActive(false);
+			interactNotice.gameObject.SetActive(false);
 		}
 	}
 
 	public void Interact()
 	{
-		if (InteractType == "PickAxe")
+		if (interactType == "PickAxe")
 		{
-			GM.HavePickAxe = true;
+			GM.havePickAxe = true;
 			Debug.Log(name + "¿ª(∏¶) »πµÊ«ﬂ¥Ÿ");
 			Destroy(gameObject);
 		}
-		else if (InteractType == "Axe")
+		else if (interactType == "Axe")
 		{
-			GM.HaveAxe = true;
+			GM.haveAxe = true;
 			Debug.Log(name + "¿ª(∏¶) »πµÊ«ﬂ¥Ÿ");
 			Destroy(gameObject);
 		}
-		else if (InteractType == "Craft")
+		else if (interactType == "Craft")
 		{
 			GameObject.Find("ScreenContainer").transform.Find("Craft").gameObject.SetActive(true);
 		}
-		else if (InteractType == "Stone")
+		else if (interactType == "Stone")
 		{
 			if (Mine() == true)
 			{
@@ -61,7 +65,7 @@ public class Interactable : MonoBehaviour
 				Destroy(gameObject);
 			}
 		}
-		else if (InteractType == "Iron")
+		else if (interactType == "Iron")
 		{
 			if (Mine() == true)
 			{
@@ -69,7 +73,7 @@ public class Interactable : MonoBehaviour
 				Destroy(gameObject);
 			}
 		}
-		else if (InteractType == "Wood")
+		else if (interactType == "Wood")
 		{
 			if (Chop() == true)
 			{
@@ -77,19 +81,21 @@ public class Interactable : MonoBehaviour
 				Destroy(gameObject);
 			}
 		}
-		else if (InteractType == "Box")
+		else if (interactType == "Box")
 		{
-			if (transform.GetChild(1).GetChild(0).GetChild(0).childCount == 0)
+			int maxCount = 24;
+			if (transform.GetChild(1).GetChild(1).childCount != maxCount)
 			{
-				for (int i = 0; i < 50; i++)
+				for (int i = 0; i < maxCount; i++)
 				{
-					GameObject temp = Instantiate(Resources.Load("Prefabs/ItemSlot") as GameObject);
-					temp.GetComponent<Image>().color = new Color(0, 0, Random.Range(0, 256) / 255f);
-					temp.transform.SetParent(transform.GetChild(1).GetChild(0).GetChild(0));
-					temp.transform.localScale = Vector3.one;
+					GameObject itemSlot = Instantiate(Resources.Load("Prefabs/ItemSlot") as GameObject);
+					itemSlot.GetComponent<Image>().color = new Color(0, 0, Random.Range(0, 256) / 255f);
+					itemSlot.transform.SetParent(transform.GetChild(1).GetChild(1));
+					itemSlot.transform.localScale = Vector3.one;
 				}
 			}
 			transform.GetChild(1).gameObject.SetActive(true);
+			PL.transform.GetChild(2).gameObject.SetActive(true);
 			GM.UIOpen = true;
 		}
 		else
@@ -100,7 +106,7 @@ public class Interactable : MonoBehaviour
 
 	private bool Mine()
 	{
-		if (GM.HavePickAxe == true)
+		if (GM.havePickAxe == true)
 		{
 			Debug.Log(name + "¿ª(∏¶) √§±§«ﬂ¥Ÿ");
 			return true;
@@ -114,7 +120,7 @@ public class Interactable : MonoBehaviour
 
 	private bool Chop()
 	{
-		if (GM.HaveAxe == true)
+		if (GM.haveAxe == true)
 		{
 			Debug.Log(name + "¿ª(∏¶) π˙∏Ò«ﬂ¥Ÿ");
 			return true;
@@ -128,7 +134,8 @@ public class Interactable : MonoBehaviour
 
 	public void UIClose()
 	{
-		transform.GetChild(1).gameObject.SetActive(false);
+		EventSystem.current.currentSelectedGameObject.transform.parent.gameObject.SetActive(false);
+		PL.transform.GetChild(2).gameObject.SetActive(false);
 		GM.UIOpen = false;
 	}
 }

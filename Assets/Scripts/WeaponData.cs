@@ -7,7 +7,7 @@ public class WeaponData : MonoBehaviour
 	public float DMG;
 	public float RPM;
 	public float BSPD;
-	public float Range;
+	public float range;
 	public float PEN;
 
 	void Start()

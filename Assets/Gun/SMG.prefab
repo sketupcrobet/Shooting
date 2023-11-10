@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 4807764488688221700}
   - component: {fileID: 3993402431058430438}
   m_Layer: 5
-  m_Name: GUN2
+  m_Name: SMG
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -49,7 +49,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   DMG: 10
-  RPM: 60
-  BSPD: 100000
-  Range: 1000
+  RPM: 600
+  BSPD: 1000
+  range: 10000
   PEN: 1

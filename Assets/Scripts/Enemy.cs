@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class Enemy : MonoBehaviour
 {
-	public float Health;
+	public float health;
 
 	public bool moveOn;
 	private Vector3 startPos;
@@ -16,12 +16,14 @@ public class Enemy : MonoBehaviour
 	public float minDelay;
 	public float maxDelay;
 
-	[SerializeField] private WeaponData WeaponData;
+	[SerializeField] private WeaponData weaponData;
 	private bool isPlayer;
 
 	public int MoveType;
 
-	IEnumerator test;
+	IEnumerator resetChase;
+
+	private GameObject PL;
 
 	void Start()
 	{
@@ -29,15 +31,18 @@ public class Enemy : MonoBehaviour
 		startPos = transform.position;
 		ResetPos();
 		StartCoroutine("AttackCycle");
+		resetChase = ResetChase();
+		PL = GameObject.Find("Player");
 	}
 
 	void Update()
 	{
 		Move();
-		if (Health <= 0)
+		if (health <= 0)
 		{
 			Destroy(gameObject);
 		}
+		Debug.DrawRay(transform.position, GameObject.Find("Player").transform.position - transform.position, Color.yellow);
 	}
 
 	IEnumerator AttackCycle()
@@ -47,11 +52,11 @@ public class Enemy : MonoBehaviour
 			if (isPlayer)
 			{
 				GameObject temp = Instantiate(Resources.Load("Prefabs/Bullet") as GameObject, transform.Find("Gun").position, transform.rotation);
-				temp.GetComponent<Bullet>().DMG = WeaponData.DMG;
-				temp.GetComponent<Bullet>().BSPD = WeaponData.BSPD;
-				temp.GetComponent<Bullet>().Range = WeaponData.Range;
-				temp.GetComponent<Bullet>().PEN = WeaponData.PEN;
-				yield return new WaitForSeconds(60 / WeaponData.RPM);
+				temp.GetComponent<Bullet>().DMG = weaponData.DMG;
+				temp.GetComponent<Bullet>().BSPD = weaponData.BSPD;
+				temp.GetComponent<Bullet>().range = weaponData.range;
+				temp.GetComponent<Bullet>().PEN = weaponData.PEN;
+				yield return new WaitForSeconds(60 / weaponData.RPM);
 			}
 			else
 			{
@@ -60,10 +65,18 @@ public class Enemy : MonoBehaviour
 		}
 	}
 
-	IEnumerator ResetCoroutine()
+	IEnumerator ResetMove()
 	{
 		yield return new WaitForSeconds(Random.Range(minDelay, maxDelay));
 		ResetPos();
+	}
+
+	IEnumerator ResetChase()
+	{
+		yield return new WaitForSeconds(10);
+		MoveType = 2;
+		isreset = false;
+		StartCoroutine(ResetMove());
 	}
 
 	private void ResetPos()
@@ -79,38 +92,48 @@ public class Enemy : MonoBehaviour
 	{
 		if (moveOn)
 		{
+			//통상
 			if (MoveType == 0)
 			{
+				transform.GetChild(0).GetComponent<CircleCollider2D>().radius = 5;
 				if (transform.position == endPos)
 				{
 					if (isreset == true)
 					{
 						isreset = false;
-						StartCoroutine(ResetCoroutine());
+						StartCoroutine(ResetMove());
 					}
 				}
-				if (transform.position.x < endPos.x)
-				{
-					GetComponent<SpriteRenderer>().flipX = true;
-				}
-				else if (transform.position.x > endPos.x)
-				{
-					GetComponent<SpriteRenderer>().flipX = false;
-				}
-				//transform.position = Vector2.MoveTowards(transform.position, endPos, moveSpeed * Time.deltaTime);
 				if (isreset == true)
 				{
-					transform.position += (transform.right * moveSpeed * Time.deltaTime);
+					transform.position += transform.right * moveSpeed * Time.deltaTime;
 				}
 			}
+			//교전
 			else if (MoveType == 1)
 			{
-				GameObject PL = GameObject.Find("Player");
+				transform.GetChild(0).GetComponent<CircleCollider2D>().radius = 10;
 				Vector3 myloc = transform.position;
 				Vector3 targetloc = PL.transform.position;
 				transform.rotation = Quaternion.Euler(0, 0, Mathf.Atan2(targetloc.y - myloc.y, targetloc.x - myloc.x) * Mathf.Rad2Deg);
-				//transform.position = Vector2.MoveTowards(myloc, targetloc, moveSpeed * Time.deltaTime);
-				transform.position += (transform.right * moveSpeed * Time.deltaTime);
+				transform.position += transform.right * moveSpeed * Time.deltaTime;
+			}
+			//경계
+			else if (MoveType == 2)
+			{
+				transform.GetChild(0).GetComponent<CircleCollider2D>().radius = 8;
+				if (transform.position == endPos)
+				{
+					if (isreset == true)
+					{
+						isreset = false;
+						StartCoroutine(ResetMove());
+					}
+				}
+				if (isreset == true)
+				{
+					transform.position += transform.right * moveSpeed * Time.deltaTime;
+				}
 			}
 		}
 	}
@@ -127,19 +150,30 @@ public class Enemy : MonoBehaviour
 	{
 		if (collision.tag == "Player")
 		{
-			StopCoroutine(test);
-			Vector3 myloc = transform.position;
-			Vector3 targetloc = collision.transform.position;
-			transform.rotation = Quaternion.Euler(0, 0, Mathf.Atan2(targetloc.y - myloc.y, targetloc.x - myloc.x) * Mathf.Rad2Deg);
-			MoveType = 1;
-			transform.GetChild(0).GetComponent<CircleCollider2D>().radius = 10;
-			if (Vector3.Distance(myloc, targetloc) <= 5)
+			LayerMask MyLayermask = (1 << 6) | (1 << 8);
+
+			RaycastHit2D ALLHitz = Physics2D.Raycast(transform.position, GameObject.Find("Player").transform.position - transform.position, transform.GetChild(0).GetComponent<CircleCollider2D>().radius, MyLayermask);
+			if (ALLHitz.transform.gameObject.tag == "Player")
 			{
-				isPlayer = true;
+
+				StopCoroutine(resetChase);
+				Vector3 mypos = transform.position;
+				Vector3 targetpos = collision.transform.position;
+				transform.rotation = Quaternion.Euler(0, 0, Mathf.Atan2(targetpos.y - mypos.y, targetpos.x - mypos.x) * Mathf.Rad2Deg);
+				MoveType = 1;
+				if (Vector3.Distance(mypos, targetpos) <= 5)
+				{
+					isPlayer = true;
+				}
+				else
+				{
+					isPlayer = false;
+				}
 			}
 			else
 			{
-				isPlayer = false;
+				resetChase = ResetChase();
+				StartCoroutine(resetChase);
 			}
 		}
 	}
@@ -148,15 +182,9 @@ public class Enemy : MonoBehaviour
 	{
 		if (collision.tag == "Player")
 		{
-			test = ResetChase();
-			StartCoroutine(test);
+			resetChase = ResetChase();
+			StartCoroutine(resetChase);
 		}
-	}
-
-	IEnumerator ResetChase()
-	{
-		yield return new WaitForSeconds(10);
-		MoveType = 0;
 	}
 
 #if UNITY_EDITOR

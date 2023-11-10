@@ -9,6 +9,7 @@ TagManager:
   - Item
   - NPC
   - Wall
+  - Box
   layers:
   - Default
   - TransparentFX

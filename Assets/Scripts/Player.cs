@@ -1,28 +1,61 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Player : MonoBehaviour
 {
-	public float Speed;
-	private int InteractCount;
-	private GameObject InteractObj;
-	[SerializeField] private WeaponData WeaponData;
+	public float health;
+	public float speed;
+	private int interactCount;
+	[SerializeField] private GameObject interactObj;
+	[SerializeField] private WeaponData weaponData;
 	private GameManager GM;
-
-	public float test1;
-	public bool test2;
+	private GameObject mainCamera;
+	public int[] InventoryNum = new int[24];
+	public int[] InventoryCount = new int[24];
 
 	void Start()
 	{
 		StartCoroutine("AttackCycle");
 		GM = GameObject.Find("GameManager").GetComponent<GameManager>();
+		mainCamera = transform.Find("Main Camera").gameObject;
 	}
 
 	void Update()
 	{
-		Move();
-		Interact();
+		if (!GM.UIOpen)
+		{
+			Move();
+			Interact();
+			if (Input.GetKeyDown(KeyCode.I))
+			{
+				for (int i = 0; i < InventoryNum.Length; i++)
+				{
+					if (InventoryNum[i] == 0 || InventoryCount[i] == 0)
+					{
+						transform.GetChild(2).GetChild(1).GetChild(i).GetChild(0).GetComponent<Image>().sprite = Resources.Load("Item/0") as Sprite;
+						transform.GetChild(2).GetChild(1).GetChild(i).GetChild(1).GetComponent<TextMeshProUGUI>().text = "";
+					}
+					else
+					{
+						Debug.Log(transform.GetChild(2).GetChild(1).GetChild(i).GetChild(0).GetComponent<Image>());
+						//transform.GetChild(2).GetChild(1).GetChild(i).GetChild(0).GetComponent<Image>().sprite = Resources.Load("Item/" + InventoryNum[i].ToString()) as Sprite;
+						transform.GetChild(2).GetChild(1).GetChild(i).GetChild(0).GetComponent<Image>().sprite = Resources.Load("Item/0") as Sprite;
+						transform.GetChild(2).GetChild(1).GetChild(i).GetChild(1).GetComponent<TextMeshProUGUI>().text = InventoryCount[i].ToString();
+					}
+				}
+				transform.GetChild(2).gameObject.SetActive(true);
+				transform.GetChild(2).GetChild(3).gameObject.SetActive(true);
+				GM.UIOpen = true;
+			}
+
+		}
+		if (health <= 0)
+		{
+			Destroy(gameObject);
+		}
 	}
 
 	IEnumerator AttackCycle()
@@ -32,11 +65,11 @@ public class Player : MonoBehaviour
 			if (Input.GetMouseButton(0) && !GM.UIOpen)
 			{
 				GameObject temp = Instantiate(Resources.Load("Prefabs/Bullet") as GameObject, transform.Find("Gun").position, transform.rotation);
-				temp.GetComponent<Bullet>().DMG = WeaponData.DMG;
-				temp.GetComponent<Bullet>().BSPD = WeaponData.BSPD;
-				temp.GetComponent<Bullet>().Range = WeaponData.Range;
-				temp.GetComponent<Bullet>().PEN = WeaponData.PEN;
-				yield return new WaitForSeconds(60 / WeaponData.RPM);
+				temp.GetComponent<Bullet>().DMG = weaponData.DMG;
+				temp.GetComponent<Bullet>().BSPD = weaponData.BSPD;
+				temp.GetComponent<Bullet>().range = weaponData.range;
+				temp.GetComponent<Bullet>().PEN = weaponData.PEN;
+				yield return new WaitForSeconds(60 / weaponData.RPM);
 			}
 			else
 			{
@@ -49,44 +82,39 @@ public class Player : MonoBehaviour
 	{
 		float MoveX;
 		float MoveY;
-		if (!GM.UIOpen)
-		{
-			Vector3 mPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-			Vector3 oPosition = transform.position;
-			transform.rotation = Quaternion.Euler(0, 0, Mathf.Atan2(mPosition.y - oPosition.y, mPosition.x - oPosition.x) * Mathf.Rad2Deg);
-			transform.Find("Main Camera").localRotation = Quaternion.Euler(0, 0, -Mathf.Atan2(mPosition.y - oPosition.y, mPosition.x - oPosition.x) * Mathf.Rad2Deg);
+		Vector3 mypos = transform.position;
+		Vector3 targetpos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+		transform.rotation = Quaternion.Euler(0, 0, Mathf.Atan2(targetpos.y - mypos.y, targetpos.x - mypos.x) * Mathf.Rad2Deg);
+		mainCamera.transform.localRotation = Quaternion.Euler(0, 0, -Mathf.Atan2(targetpos.y - mypos.y, targetpos.x - mypos.x) * Mathf.Rad2Deg);
 
-			MoveX = Input.GetAxisRaw("Horizontal");
-			MoveY = Input.GetAxisRaw("Vertical");
-		}
-		else
-		{
-			MoveX = 0;
-			MoveY = 0;
-		}
-		transform.GetComponent<Rigidbody2D>().velocity = new Vector3(MoveX * Speed, MoveY * Speed, 0);
+		MoveX = Input.GetAxisRaw("Horizontal");
+		MoveY = Input.GetAxisRaw("Vertical");
+		transform.GetComponent<Rigidbody2D>().velocity = new Vector3(MoveX * speed, MoveY * speed, 0);
 	}
 
 	private void Interact()
 	{
-		if (Input.GetKeyDown(KeyCode.G) && InteractObj != null)
+		if (Input.GetKeyDown(KeyCode.G) && interactObj != null)
 		{
-			InteractObj.GetComponent<Interactable>().Interact();
+			interactObj.GetComponent<Interactable>().Interact();
 		}
 	}
 
 	private void OnTriggerEnter2D(Collider2D collision)
 	{
-		InteractCount++;
-		InteractObj = collision.gameObject;
+		if (collision.tag == "Resources" || collision.tag == "Item" || collision.tag == "Box" || collision.tag == "NPC")
+		{
+			interactCount++;
+			interactObj = collision.gameObject;
+		}
 	}
 
 	private void OnTriggerExit2D(Collider2D collision)
 	{
-		InteractCount--;
-		if (InteractObj == collision.gameObject || InteractCount == 0)
+		interactCount--;
+		if (interactObj == collision.gameObject || interactCount == 0)
 		{
-			InteractObj = null;
+			interactObj = null;
 		}
 	}
 }
