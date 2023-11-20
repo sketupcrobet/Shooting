@@ -10,6 +10,8 @@ TagManager:
   - NPC
   - Wall
   - Box
+  - PlayerInventory
+  - OtherInventory
   layers:
   - Default
   - TransparentFX

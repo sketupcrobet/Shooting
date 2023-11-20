@@ -6,7 +6,7 @@ using UnityEngine.SceneManagement;
 public class GameManager : MonoBehaviour
 {
 	public bool debugMod;
-	public bool UIOpen;
+	public bool isUIOpen;
 
 	public bool havePickAxe;
 	public bool haveAxe;
@@ -14,6 +14,7 @@ public class GameManager : MonoBehaviour
 	private float deltaTime = 0.0f;
 
 	public GameObject closeObj;
+	public GameObject UIObj;
 
 	void Start()
 	{
@@ -21,6 +22,8 @@ public class GameManager : MonoBehaviour
 		//SceneManager.LoadScene("Title");
 		QualitySettings.vSyncCount = 0;
 		Application.targetFrameRate = 60;
+
+		UIObj = GameObject.Find("UI");
 	}
 
 	void Update()
@@ -41,6 +44,27 @@ public class GameManager : MonoBehaviour
 				Application.targetFrameRate = 30;
 			}
 		}
+	}
+
+	public void UIOpen(GameObject UIObjList)
+	{
+		/*
+		for (int i = 0; UIObjList.Length > i; i++)
+		{
+			UIObjList[i].SetActive(true);
+		}
+		*/
+		UIObjList.SetActive(true);
+		closeObj = UIObjList.transform.Find("Close").gameObject;
+		//this.closeObj = closeObj;
+		isUIOpen = true;
+	}
+
+	public void UIClose()
+	{
+		closeObj.transform.parent.gameObject.SetActive(false);
+		GameObject.Find("Player").GetComponent<Player>().OtherObj = null;
+		isUIOpen = false;
 	}
 
 	void OnGUI()

@@ -1,21 +1,22 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
-using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 public class Interactable : MonoBehaviour
 {
 	public string interactType;
-	private GameObject interactNotice;
 	private GameManager GM;
-	private GameObject PL;
+	private Player PL;
+
+	public int[] InventoryCode;
+	public int[] InventoryCount;
 
 	void Start()
 	{
 		GM = GameObject.Find("GameManager").GetComponent<GameManager>();
-		PL = GameObject.Find("Player");
-		//interactNotice = transform.GetChild(0).gameObject;
+		PL = GameObject.Find("Player").GetComponent<Player>();
 	}
 
 	void Update()
@@ -28,14 +29,20 @@ public class Interactable : MonoBehaviour
 		if (interactType == "PickAxe")
 		{
 			GM.havePickAxe = true;
-			Debug.Log(name + "À»(¸¦) È¹µæÇß´Ù");
-			Destroy(gameObject);
+			if (PL.AddItem(1, 1))
+			{
+				Debug.Log(name + "À»(¸¦) È¹µæÇß´Ù");
+				Destroy(gameObject);
+			}
 		}
 		else if (interactType == "Axe")
 		{
 			GM.haveAxe = true;
-			Debug.Log(name + "À»(¸¦) È¹µæÇß´Ù");
-			Destroy(gameObject);
+			if (PL.AddItem(2, 1))
+			{
+				Debug.Log(name + "À»(¸¦) È¹µæÇß´Ù");
+				Destroy(gameObject);
+			}
 		}
 		else if (interactType == "Craft")
 		{
@@ -45,44 +52,53 @@ public class Interactable : MonoBehaviour
 		{
 			if (Mine() == true)
 			{
-				Debug.Log("µ¹+1");
-				Destroy(gameObject);
+				if (PL.AddItem(3, 1) == true)
+				{
+					Debug.Log(name + "À»(¸¦) Ã¤±¤Çß´Ù");
+					Debug.Log("µ¹+1");
+					Destroy(gameObject);
+				}
 			}
 		}
 		else if (interactType == "Iron")
 		{
 			if (Mine() == true)
 			{
-				Debug.Log("Ã¶+1");
-				Destroy(gameObject);
+				if (PL.AddItem(4, 1) == true)
+				{
+					Debug.Log(name + "À»(¸¦) Ã¤±¤Çß´Ù");
+					Debug.Log("Ã¶+1");
+					Destroy(gameObject);
+				}
 			}
 		}
 		else if (interactType == "Wood")
 		{
 			if (Chop() == true)
 			{
-				Debug.Log("³ª¹«+1");
-				Destroy(gameObject);
+				if (PL.AddItem(5, 1) == true)
+				{
+					Debug.Log(name + "À»(¸¦) ¹ú¸ñÇß´Ù");
+					Debug.Log("³ª¹«+1");
+					Destroy(gameObject);
+				}
 			}
 		}
 		else if (interactType == "Box")
 		{
-			int maxCount = 24;
-			Transform Inventory = transform.Find("Canvas").Find("Inventory").Find("Inventory");
-			if (Inventory.childCount != maxCount)
+			if (InventoryCode.Length == 0)
 			{
-				for (int i = 0; i < maxCount; i++)
+				InventoryCode = new int[24];
+				InventoryCount = new int[24];
+				for (int i = 0; InventoryCode.Length > i; i++)
 				{
-					GameObject itemSlot = Instantiate(Resources.Load<GameObject>("Prefabs/ItemSlot"));
-					itemSlot.transform.GetChild(0).GetComponent<Image>().sprite = Resources.Load<Sprite>("Item/" + Random.Range(0, 25));
-					itemSlot.transform.SetParent(Inventory);
-					itemSlot.transform.localScale = Vector3.one;
+					InventoryCode[i] = Random.Range(0, 25);
+					InventoryCount[i] = Random.Range(1, 11);
 				}
 			}
-			transform.Find("Canvas").Find("Inventory").gameObject.SetActive(true);
-			PL.transform.Find("Canvas").Find("Inventory").gameObject.SetActive(true);
-			GM.closeObj = transform.Find("Canvas").Find("Inventory").Find("Name").Find("Close").gameObject;
-			GM.UIOpen = true;
+			PL.OtherObj = GetComponent<Interactable>();
+			PL.InventoryRefresh();
+			GM.UIOpen(GM.UIObj.transform.Find("Inventory").gameObject);
 		}
 		else
 		{
@@ -94,7 +110,6 @@ public class Interactable : MonoBehaviour
 	{
 		if (GM.havePickAxe == true)
 		{
-			Debug.Log(name + "À»(¸¦) Ã¤±¤Çß´Ù");
 			return true;
 		}
 		else
@@ -108,7 +123,6 @@ public class Interactable : MonoBehaviour
 	{
 		if (GM.haveAxe == true)
 		{
-			Debug.Log(name + "À»(¸¦) ¹ú¸ñÇß´Ù");
 			return true;
 		}
 		else
@@ -120,9 +134,6 @@ public class Interactable : MonoBehaviour
 
 	public void UIClose()
 	{
-		//EventSystem.current.currentSelectedGameObject.transform.parent.gameObject.SetActive(false);
-		GM.closeObj.transform.parent.parent.gameObject.SetActive(false);
-		PL.transform.Find("Canvas").Find("Inventory").gameObject.SetActive(false);
-		GM.UIOpen = false;
+		GM.UIClose();
 	}
 }
