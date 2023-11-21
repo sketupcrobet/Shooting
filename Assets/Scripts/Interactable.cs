@@ -92,8 +92,8 @@ public class Interactable : MonoBehaviour
 				InventoryCount = new int[24];
 				for (int i = 0; InventoryCode.Length > i; i++)
 				{
-					InventoryCode[i] = Random.Range(0, 25);
-					InventoryCount[i] = Random.Range(1, 11);
+					InventoryCode[i] = Random.Range(0, 7);
+					InventoryCount[i] = Random.Range(1, 2);
 				}
 			}
 			PL.OtherObj = GetComponent<Interactable>();

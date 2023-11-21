@@ -4691,7 +4691,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4334160045560414633, guid: 7cbeceb0ec4b1e34282a80db0b2abd13, type: 3}
       propertyPath: m_Name
-      value: Rig
+      value: Rig(4)
+      objectReference: {fileID: 0}
+    - target: {fileID: 4334160045560414633, guid: 7cbeceb0ec4b1e34282a80db0b2abd13, type: 3}
+      propertyPath: m_TagString
+      value: EquipInventory
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects:
@@ -4794,7 +4798,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4334160045560414633, guid: 7cbeceb0ec4b1e34282a80db0b2abd13, type: 3}
       propertyPath: m_Name
-      value: Weapon1
+      value: Weapon1(0)
+      objectReference: {fileID: 0}
+    - target: {fileID: 4334160045560414633, guid: 7cbeceb0ec4b1e34282a80db0b2abd13, type: 3}
+      propertyPath: m_TagString
+      value: EquipInventory
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects:
@@ -5216,12 +5224,12 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 494513198}
+  - {fileID: 958341847}
   - {fileID: 610624437}
   - {fileID: 1554478658}
   - {fileID: 477036169}
   - {fileID: 2123026164}
-  - {fileID: 494513198}
-  - {fileID: 958341847}
   m_Father: {fileID: 1018233924}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
@@ -5642,7 +5650,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4334160045560414633, guid: 7cbeceb0ec4b1e34282a80db0b2abd13, type: 3}
       propertyPath: m_Name
-      value: Helmet
+      value: Helmet(2)
+      objectReference: {fileID: 0}
+    - target: {fileID: 4334160045560414633, guid: 7cbeceb0ec4b1e34282a80db0b2abd13, type: 3}
+      propertyPath: m_TagString
+      value: EquipInventory
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects:
@@ -8054,7 +8066,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4334160045560414633, guid: 7cbeceb0ec4b1e34282a80db0b2abd13, type: 3}
       propertyPath: m_Name
-      value: Weapon2
+      value: Weapon2(1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 4334160045560414633, guid: 7cbeceb0ec4b1e34282a80db0b2abd13, type: 3}
+      propertyPath: m_TagString
+      value: EquipInventory
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects:
@@ -9637,6 +9653,7 @@ MonoBehaviour:
   weaponData: {fileID: 3993402431058430438, guid: d53030756dc0d554788ee3086abd317e, type: 3}
   InventoryCode: 000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
   InventoryCount: 000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+  EquipCode: 000000000000000000000000000000000000000000000000
   OtherObj: {fileID: 0}
 --- !u!50 &1220834011
 Rigidbody2D:
@@ -11952,7 +11969,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4334160045560414633, guid: 7cbeceb0ec4b1e34282a80db0b2abd13, type: 3}
       propertyPath: m_Name
-      value: Plate
+      value: Plate(3)
+      objectReference: {fileID: 0}
+    - target: {fileID: 4334160045560414633, guid: 7cbeceb0ec4b1e34282a80db0b2abd13, type: 3}
+      propertyPath: m_TagString
+      value: EquipInventory
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects:
@@ -18072,7 +18093,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4334160045560414633, guid: 7cbeceb0ec4b1e34282a80db0b2abd13, type: 3}
       propertyPath: m_Name
-      value: Backpack
+      value: Backpack(5)
+      objectReference: {fileID: 0}
+    - target: {fileID: 4334160045560414633, guid: 7cbeceb0ec4b1e34282a80db0b2abd13, type: 3}
+      propertyPath: m_TagString
+      value: EquipInventory
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects:

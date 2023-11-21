@@ -12,6 +12,7 @@ TagManager:
   - Box
   - PlayerInventory
   - OtherInventory
+  - EquipInventory
   layers:
   - Default
   - TransparentFX
