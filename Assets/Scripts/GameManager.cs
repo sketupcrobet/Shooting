@@ -63,7 +63,6 @@ public class GameManager : MonoBehaviour
 	public void UIClose()
 	{
 		closeObj.transform.parent.gameObject.SetActive(false);
-		GameObject.Find("Player").GetComponent<Player>().InteractObj = null;
 		isUIOpen = false;
 	}
 

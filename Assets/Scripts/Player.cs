@@ -16,7 +16,6 @@ public class Player : MonoBehaviour
 	public int[] InventoryCount = new int[24];
 	public int[] EquipCode = new int[6];
 
-	[SerializeField] private GameObject interactObj;
 	[SerializeField] private WeaponData weaponData;
 	public Interactable InteractObj;
 	public ItemSlot InventoryObj;
@@ -44,7 +43,10 @@ public class Player : MonoBehaviour
 		if (!GM.isUIOpen)
 		{
 			Move();
-			Interact();
+			if (Input.GetKeyDown(KeyCode.G) && InteractObj != null)
+			{
+				InteractObj.Interact();
+			}
 			if (Input.GetKeyDown(KeyCode.I))
 			{
 				InventoryRefresh();
@@ -228,31 +230,23 @@ public class Player : MonoBehaviour
 		transform.GetComponent<Rigidbody2D>().velocity = new Vector3(MoveX * speed, MoveY * speed, 0);
 	}
 
-	private void Interact()
-	{
-		if (Input.GetKeyDown(KeyCode.G) && interactObj != null)
-		{
-			interactObj.GetComponent<Interactable>().Interact();
-		}
-	}
-
 	private void OnTriggerEnter2D(Collider2D collision)
 	{
 		if (collision.tag == "Resources" || collision.tag == "Item" || collision.tag == "Box" || collision.tag == "NPC")
 		{
-			if (interactObj == null)
+			if (InteractObj == null)
 			{
-				interactObj = collision.gameObject;
+				InteractObj = collision.gameObject.GetComponent<Interactable>();
 				GameObject interactNotice = Instantiate(Resources.Load<GameObject>("prefabs/InteractNotice"));
-				interactNotice.transform.SetParent(interactObj.transform);
+				interactNotice.transform.SetParent(InteractObj.transform);
 				interactNotice.transform.localPosition = new Vector3(0, 0, 0);
 			}
 			else
 			{
-				Destroy(interactObj.transform.Find("InteractNotice(Clone)").gameObject);
-				interactObj = collision.gameObject;
+				Destroy(InteractObj.transform.Find("InteractNotice(Clone)").gameObject);
+				InteractObj = collision.gameObject.GetComponent<Interactable>();
 				GameObject interactNotice = Instantiate(Resources.Load<GameObject>("prefabs/InteractNotice"));
-				interactNotice.transform.SetParent(interactObj.transform);
+				interactNotice.transform.SetParent(InteractObj.transform);
 				interactNotice.transform.localPosition = new Vector3(0, 0, 0);
 			}
 		}
@@ -260,10 +254,10 @@ public class Player : MonoBehaviour
 
 	private void OnTriggerExit2D(Collider2D collision)
 	{
-		if (interactObj == collision.gameObject)
+		if (InteractObj == collision.gameObject.GetComponent<Interactable>())
 		{
-			Destroy(interactObj.transform.Find("InteractNotice(Clone)").gameObject);
-			interactObj = null;
+			Destroy(InteractObj.transform.Find("InteractNotice(Clone)").gameObject);
+			InteractObj = null;
 		}
 	}
 }

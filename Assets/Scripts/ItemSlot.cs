@@ -183,7 +183,7 @@ public class ItemSlot : MonoBehaviour, IPointerEnterHandler
 
 	public void OnPointerEnter(PointerEventData eventData)
 	{
-		Debug.Log(name);
+		//Debug.Log(name);
 		PL.InventoryObj = GetComponent<ItemSlot>();
 	}
 }
