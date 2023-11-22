@@ -12,16 +12,17 @@ public class Player : MonoBehaviour
 	private GameManager GM;
 	private GameObject mainCamera;
 
-	public int[] InventoryCode = new int[24];
-	public int[] InventoryCount = new int[24];
-	public int[] EquipCode = new int[6];
+	public int[] inventoryCode = new int[24];
+	public int[] inventoryCount = new int[24];
+	public int[] equipCode = new int[6];
+	public int[] hotbarCode = new int[10];
 
 	[SerializeField] private WeaponData weaponData;
-	public Interactable InteractObj;
-	public ItemSlot InventoryObj;
+	public Interactable interactObj;
+	public ItemSlot inventoryObj;
 
-	private int NowAmmo;
-	private int MaxAmmo;
+	private int nowAmmo;
+	private int maxAmmo;
 	private bool reloading;
 
 	void Start()
@@ -29,23 +30,31 @@ public class Player : MonoBehaviour
 		StartCoroutine("AttackCycle");
 		GM = GameObject.Find("GameManager").GetComponent<GameManager>();
 		mainCamera = transform.Find("Main Camera").gameObject;
-		MaxAmmo = weaponData.MaxAmmo;
-		NowAmmo = MaxAmmo;
-		GM.UIObj.transform.Find("Ammo").GetComponent<TextMeshProUGUI>().text = NowAmmo.ToString() + "/" + MaxAmmo.ToString();
+		maxAmmo = weaponData.MaxAmmo;
+		nowAmmo = maxAmmo;
+		GM.UIObj.transform.Find("Ammo").GetComponent<TextMeshProUGUI>().text = nowAmmo.ToString() + "/" + maxAmmo.ToString();
 	}
 
 	void Update()
 	{
 		if (Input.GetKeyDown(KeyCode.Alpha1))
 		{
-			Debug.Log(InventoryObj);
+			if (inventoryCode[int.Parse(inventoryObj.name.Split("(")[1].Split(")")[0])] != 0)
+			{
+				hotbarCode[0] = int.Parse(inventoryObj.name.Split("(")[1].Split(")")[0]) + 1;
+			}
+			InventoryRefresh();
+		}
+		if (Input.GetKeyDown(KeyCode.Alpha2))
+		{
+
 		}
 		if (!GM.isUIOpen)
 		{
 			Move();
-			if (Input.GetKeyDown(KeyCode.G) && InteractObj != null)
+			if (Input.GetKeyDown(KeyCode.G) && interactObj != null)
 			{
-				InteractObj.Interact();
+				interactObj.Interact();
 			}
 			if (Input.GetKeyDown(KeyCode.I))
 			{
@@ -54,7 +63,7 @@ public class Player : MonoBehaviour
 			}
 			if (Input.GetKeyDown(KeyCode.R))
 			{
-				if (NowAmmo < MaxAmmo && reloading == false)
+				if (nowAmmo < maxAmmo && reloading == false)
 				{
 					reloading = true;
 					StartCoroutine(Reload());
@@ -81,80 +90,93 @@ public class Player : MonoBehaviour
 
 	public void InventoryRefresh()
 	{
-		for (int i = 0; InventoryCode.Length > i; i++)
+		for (int i = 0; inventoryCode.Length > i; i++)
 		{
-			if (InventoryCount[i] == 0)
+			if (inventoryCount[i] == 0)
 			{
-				InventoryCode[i] = 0;
+				inventoryCode[i] = 0;
 			}
-			if (InventoryCode[i] == 0)
+			if (inventoryCode[i] == 0)
 			{
 				GM.UIObj.transform.Find("Inventory").Find("Player").GetChild(i).GetChild(0).GetComponent<Image>().sprite = Resources.Load<Sprite>("Item/0");
 				GM.UIObj.transform.Find("Inventory").Find("Player").GetChild(i).GetChild(1).GetComponent<TextMeshProUGUI>().text = "";
 			}
 			else
 			{
-				GM.UIObj.transform.Find("Inventory").Find("Player").GetChild(i).GetChild(0).GetComponent<Image>().sprite = Resources.Load("Item/" + InventoryCode[i]).GetComponent<Item>().itemIcon;
-				//GM.UIObj.transform.Find("Inventory").Find("Player").GetChild(i).GetChild(0).GetComponent<Image>().sprite = Resources.Load<Sprite>("Item/" + InventoryCode[i]);
-				GM.UIObj.transform.Find("Inventory").Find("Player").GetChild(i).GetChild(1).GetComponent<TextMeshProUGUI>().text = InventoryCount[i].ToString();
+				GM.UIObj.transform.Find("Inventory").Find("Player").GetChild(i).GetChild(0).GetComponent<Image>().sprite = Resources.Load("Item/" + inventoryCode[i]).GetComponent<Item>().itemIcon;
+				//GM.UIObj.transform.Find("Inventory").Find("Player").GetChild(i).GetChild(0).GetComponent<Image>().sprite = Resources.Load<Sprite>("Item/" + inventoryCode[i]);
+				GM.UIObj.transform.Find("Inventory").Find("Player").GetChild(i).GetChild(1).GetComponent<TextMeshProUGUI>().text = inventoryCount[i].ToString();
 			}
 		}
-		for (int i = 0; EquipCode.Length > i; i++)
+		for (int i = 0; equipCode.Length > i; i++)
 		{
-			GM.UIObj.transform.Find("Inventory").Find("Equip").GetChild(i).GetChild(0).GetComponent<Image>().sprite = Resources.Load("Item/" + EquipCode[i]).GetComponent<Item>().itemIcon;
+			GM.UIObj.transform.Find("Inventory").Find("Equip").GetChild(i).GetChild(0).GetComponent<Image>().sprite = Resources.Load("Item/" + equipCode[i]).GetComponent<Item>().itemIcon;
 			//GM.UIObj.transform.Find("Inventory").Find("Equip").GetChild(i).GetChild(0).GetComponent<Image>().sprite = Resources.Load<Sprite>("Item/" + EquipCode[i]);
 		}
-		if (InteractObj != null)
+		if (interactObj != null)
 		{
-			for (int i = 0; InteractObj.InventoryCode.Length > i; i++)
+			for (int i = 0; interactObj.inventoryCode.Length > i; i++)
 			{
-				if (InteractObj.InventoryCount[i] == 0)
+				if (interactObj.inventoryCount[i] == 0)
 				{
-					InteractObj.InventoryCode[i] = 0;
+					interactObj.inventoryCode[i] = 0;
 				}
-				if (InteractObj.InventoryCode[i] == 0)
+				if (interactObj.inventoryCode[i] == 0)
 				{
 					GM.UIObj.transform.Find("Inventory").Find("Other").GetChild(i).GetChild(0).GetComponent<Image>().sprite = Resources.Load<Sprite>("Item/0");
 					GM.UIObj.transform.Find("Inventory").Find("Other").GetChild(i).GetChild(1).GetComponent<TextMeshProUGUI>().text = "";
 				}
 				else
 				{
-					GM.UIObj.transform.Find("Inventory").Find("Other").GetChild(i).GetChild(0).GetComponent<Image>().sprite = Resources.Load("Item/" + InteractObj.InventoryCode[i]).GetComponent<Item>().itemIcon;
-					//GM.UIObj.transform.Find("Inventory").Find("Other").GetChild(i).GetChild(0).GetComponent<Image>().sprite = Resources.Load<Sprite>("Item/" + OtherObj.InventoryCode[i]);
-					GM.UIObj.transform.Find("Inventory").Find("Other").GetChild(i).GetChild(1).GetComponent<TextMeshProUGUI>().text = InteractObj.InventoryCount[i].ToString();
+					GM.UIObj.transform.Find("Inventory").Find("Other").GetChild(i).GetChild(0).GetComponent<Image>().sprite = Resources.Load("Item/" + interactObj.inventoryCode[i]).GetComponent<Item>().itemIcon;
+					//GM.UIObj.transform.Find("Inventory").Find("Other").GetChild(i).GetChild(0).GetComponent<Image>().sprite = Resources.Load<Sprite>("Item/" + OtherObj.inventoryCode[i]);
+					GM.UIObj.transform.Find("Inventory").Find("Other").GetChild(i).GetChild(1).GetComponent<TextMeshProUGUI>().text = interactObj.inventoryCount[i].ToString();
 				}
 			}
-			GM.UIObj.transform.Find("Inventory").Find("OName").GetChild(0).GetComponent<TextMeshProUGUI>().text = InteractObj.name;
+			GM.UIObj.transform.Find("Inventory").Find("OName").GetChild(0).GetComponent<TextMeshProUGUI>().text = interactObj.name;
 		}
 		else
 		{
-			for (int i = 0; InventoryCode.Length > i; i++)
+			for (int i = 0; inventoryCode.Length > i; i++)
 			{
 				GM.UIObj.transform.Find("Inventory").Find("Other").GetChild(i).GetChild(0).GetComponent<Image>().sprite = Resources.Load<Sprite>("Item/0");
 				GM.UIObj.transform.Find("Inventory").Find("Other").GetChild(i).GetChild(1).GetComponent<TextMeshProUGUI>().text = "";
 			}
 			GM.UIObj.transform.Find("Inventory").Find("OName").GetChild(0).GetComponent<TextMeshProUGUI>().text = "";
 		}
+		for (int i = 0; hotbarCode.Length > i; i++)
+		{
+			if (hotbarCode[i] != 0)
+			{
+				GM.UIObj.transform.Find("Inventory").Find("Hotbar").GetChild(i).GetChild(0).GetComponent<Image>().sprite = Resources.Load("Item/" + inventoryCode[hotbarCode[i] - 1]).GetComponent<Item>().itemIcon;
+				GM.UIObj.transform.Find("Inventory").Find("Hotbar").GetChild(i).GetChild(1).GetComponent<TextMeshProUGUI>().text = inventoryCount[hotbarCode[i] - 1].ToString();
+			}
+			else
+			{
+				GM.UIObj.transform.Find("Inventory").Find("Hotbar").GetChild(i).GetChild(0).GetComponent<Image>().sprite = Resources.Load("Item/0").GetComponent<Item>().itemIcon;
+				GM.UIObj.transform.Find("Inventory").Find("Hotbar").GetChild(i).GetChild(1).GetComponent<TextMeshProUGUI>().text = "";
+			}
+		}
 	}
 
 	public bool AddItem(int itemCode, int itemCount)
 	{
 		bool iswork = false;
-		for (int i = 0; InventoryCode.Length > i; i++)
+		for (int i = 0; inventoryCode.Length > i; i++)
 		{
-			if (InventoryCode[i] == itemCode)
+			if (inventoryCode[i] == itemCode)
 			{
-				InventoryCount[i] += itemCount;
+				inventoryCount[i] += itemCount;
 				iswork = true;
 				break;
 			}
 		}
-		for (int i = 0; InventoryCode.Length > i && iswork == false; i++)
+		for (int i = 0; inventoryCode.Length > i && iswork == false; i++)
 		{
-			if (InventoryCode[i] == 0)
+			if (inventoryCode[i] == 0)
 			{
-				InventoryCode[i] = itemCode;
-				InventoryCount[i] = itemCount;
+				inventoryCode[i] = itemCode;
+				inventoryCount[i] = itemCount;
 				iswork = true;
 				break;
 			}
@@ -179,8 +201,8 @@ public class Player : MonoBehaviour
 			reloadingBar.value = count;
 			yield return new WaitForSeconds(0.1f);
 		}
-		NowAmmo = MaxAmmo;
-		GM.UIObj.transform.Find("Ammo").GetComponent<TextMeshProUGUI>().text = NowAmmo.ToString() + "/" + MaxAmmo.ToString();
+		nowAmmo = maxAmmo;
+		GM.UIObj.transform.Find("Ammo").GetComponent<TextMeshProUGUI>().text = nowAmmo.ToString() + "/" + maxAmmo.ToString();
 		reloading = false;
 		yield return new WaitForSeconds(0.3f);
 		reloadingBar.gameObject.SetActive(false);
@@ -192,15 +214,15 @@ public class Player : MonoBehaviour
 		{
 			if (Input.GetMouseButton(0) && !GM.isUIOpen)
 			{
-				if (NowAmmo >= 1 && reloading == false)
+				if (nowAmmo >= 1 && reloading == false)
 				{
 					GameObject temp = Instantiate(Resources.Load<GameObject>("Prefabs/Bullet"), transform.Find("Gun").position, transform.rotation);
 					temp.GetComponent<Bullet>().DMG = weaponData.DMG;
 					temp.GetComponent<Bullet>().BSPD = weaponData.BSPD;
 					temp.GetComponent<Bullet>().range = weaponData.range;
 					temp.GetComponent<Bullet>().PEN = weaponData.PEN;
-					NowAmmo -= 1;
-					GM.UIObj.transform.Find("Ammo").GetComponent<TextMeshProUGUI>().text = NowAmmo.ToString() + "/" + MaxAmmo.ToString();
+					nowAmmo -= 1;
+					GM.UIObj.transform.Find("Ammo").GetComponent<TextMeshProUGUI>().text = nowAmmo.ToString() + "/" + maxAmmo.ToString();
 					yield return new WaitForSeconds(60 / weaponData.RPM);
 				}
 				else
@@ -234,19 +256,19 @@ public class Player : MonoBehaviour
 	{
 		if (collision.tag == "Resources" || collision.tag == "Item" || collision.tag == "Box" || collision.tag == "NPC")
 		{
-			if (InteractObj == null)
+			if (interactObj == null)
 			{
-				InteractObj = collision.gameObject.GetComponent<Interactable>();
+				interactObj = collision.gameObject.GetComponent<Interactable>();
 				GameObject interactNotice = Instantiate(Resources.Load<GameObject>("prefabs/InteractNotice"));
-				interactNotice.transform.SetParent(InteractObj.transform);
+				interactNotice.transform.SetParent(interactObj.transform);
 				interactNotice.transform.localPosition = new Vector3(0, 0, 0);
 			}
 			else
 			{
-				Destroy(InteractObj.transform.Find("InteractNotice(Clone)").gameObject);
-				InteractObj = collision.gameObject.GetComponent<Interactable>();
+				Destroy(interactObj.transform.Find("InteractNotice(Clone)").gameObject);
+				interactObj = collision.gameObject.GetComponent<Interactable>();
 				GameObject interactNotice = Instantiate(Resources.Load<GameObject>("prefabs/InteractNotice"));
-				interactNotice.transform.SetParent(InteractObj.transform);
+				interactNotice.transform.SetParent(interactObj.transform);
 				interactNotice.transform.localPosition = new Vector3(0, 0, 0);
 			}
 		}
@@ -254,10 +276,10 @@ public class Player : MonoBehaviour
 
 	private void OnTriggerExit2D(Collider2D collision)
 	{
-		if (InteractObj == collision.gameObject.GetComponent<Interactable>())
+		if (interactObj == collision.gameObject.GetComponent<Interactable>())
 		{
-			Destroy(InteractObj.transform.Find("InteractNotice(Clone)").gameObject);
-			InteractObj = null;
+			Destroy(interactObj.transform.Find("InteractNotice(Clone)").gameObject);
+			interactObj = null;
 		}
 	}
 }

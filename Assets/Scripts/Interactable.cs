@@ -8,8 +8,8 @@ public class Interactable : MonoBehaviour
 	private GameManager GM;
 	private Player PL;
 
-	public int[] InventoryCode;
-	public int[] InventoryCount;
+	public int[] inventoryCode;
+	public int[] inventoryCount;
 
 	void Start()
 	{
@@ -84,17 +84,17 @@ public class Interactable : MonoBehaviour
 		}
 		else if (interactType == "Box")
 		{
-			if (InventoryCode.Length == 0)
+			if (inventoryCode.Length == 0)
 			{
-				InventoryCode = new int[24];
-				InventoryCount = new int[24];
-				for (int i = 0; InventoryCode.Length > i; i++)
+				inventoryCode = new int[24];
+				inventoryCount = new int[24];
+				for (int i = 0; inventoryCode.Length > i; i++)
 				{
-					InventoryCode[i] = Random.Range(0, 7);
-					InventoryCount[i] = Random.Range(1, 2);
+					inventoryCode[i] = Random.Range(0, 7);
+					inventoryCount[i] = Random.Range(1, 2);
 				}
 			}
-			PL.InteractObj = GetComponent<Interactable>();
+			PL.interactObj = GetComponent<Interactable>();
 			PL.InventoryRefresh();
 			GM.UIOpen(GM.UIObj.transform.Find("Inventory").gameObject);
 		}
