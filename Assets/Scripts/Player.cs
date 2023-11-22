@@ -9,15 +9,17 @@ public class Player : MonoBehaviour
 {
 	public float health;
 	public float speed;
-	[SerializeField] private GameObject interactObj;
-	[SerializeField] private WeaponData weaponData;
 	private GameManager GM;
 	private GameObject mainCamera;
 
 	public int[] InventoryCode = new int[24];
 	public int[] InventoryCount = new int[24];
 	public int[] EquipCode = new int[6];
-	public Interactable OtherObj;
+
+	[SerializeField] private GameObject interactObj;
+	[SerializeField] private WeaponData weaponData;
+	public Interactable InteractObj;
+	public ItemSlot InventoryObj;
 
 	private int NowAmmo;
 	private int MaxAmmo;
@@ -35,6 +37,10 @@ public class Player : MonoBehaviour
 
 	void Update()
 	{
+		if (Input.GetKeyDown(KeyCode.Alpha1))
+		{
+			Debug.Log(InventoryObj);
+		}
 		if (!GM.isUIOpen)
 		{
 			Move();
@@ -96,27 +102,27 @@ public class Player : MonoBehaviour
 			GM.UIObj.transform.Find("Inventory").Find("Equip").GetChild(i).GetChild(0).GetComponent<Image>().sprite = Resources.Load("Item/" + EquipCode[i]).GetComponent<Item>().itemIcon;
 			//GM.UIObj.transform.Find("Inventory").Find("Equip").GetChild(i).GetChild(0).GetComponent<Image>().sprite = Resources.Load<Sprite>("Item/" + EquipCode[i]);
 		}
-		if (OtherObj != null)
+		if (InteractObj != null)
 		{
-			for (int i = 0; OtherObj.InventoryCode.Length > i; i++)
+			for (int i = 0; InteractObj.InventoryCode.Length > i; i++)
 			{
-				if (OtherObj.InventoryCount[i] == 0)
+				if (InteractObj.InventoryCount[i] == 0)
 				{
-					OtherObj.InventoryCode[i] = 0;
+					InteractObj.InventoryCode[i] = 0;
 				}
-				if (OtherObj.InventoryCode[i] == 0)
+				if (InteractObj.InventoryCode[i] == 0)
 				{
 					GM.UIObj.transform.Find("Inventory").Find("Other").GetChild(i).GetChild(0).GetComponent<Image>().sprite = Resources.Load<Sprite>("Item/0");
 					GM.UIObj.transform.Find("Inventory").Find("Other").GetChild(i).GetChild(1).GetComponent<TextMeshProUGUI>().text = "";
 				}
 				else
 				{
-					GM.UIObj.transform.Find("Inventory").Find("Other").GetChild(i).GetChild(0).GetComponent<Image>().sprite = Resources.Load("Item/" + OtherObj.InventoryCode[i]).GetComponent<Item>().itemIcon;
+					GM.UIObj.transform.Find("Inventory").Find("Other").GetChild(i).GetChild(0).GetComponent<Image>().sprite = Resources.Load("Item/" + InteractObj.InventoryCode[i]).GetComponent<Item>().itemIcon;
 					//GM.UIObj.transform.Find("Inventory").Find("Other").GetChild(i).GetChild(0).GetComponent<Image>().sprite = Resources.Load<Sprite>("Item/" + OtherObj.InventoryCode[i]);
-					GM.UIObj.transform.Find("Inventory").Find("Other").GetChild(i).GetChild(1).GetComponent<TextMeshProUGUI>().text = OtherObj.InventoryCount[i].ToString();
+					GM.UIObj.transform.Find("Inventory").Find("Other").GetChild(i).GetChild(1).GetComponent<TextMeshProUGUI>().text = InteractObj.InventoryCount[i].ToString();
 				}
 			}
-			GM.UIObj.transform.Find("Inventory").Find("OName").GetChild(0).GetComponent<TextMeshProUGUI>().text = OtherObj.name;
+			GM.UIObj.transform.Find("Inventory").Find("OName").GetChild(0).GetComponent<TextMeshProUGUI>().text = InteractObj.name;
 		}
 		else
 		{

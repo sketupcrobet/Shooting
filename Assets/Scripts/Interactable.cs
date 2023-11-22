@@ -1,8 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
-using TMPro;
 using UnityEngine;
-using UnityEngine.UI;
 
 public class Interactable : MonoBehaviour
 {
@@ -96,7 +94,7 @@ public class Interactable : MonoBehaviour
 					InventoryCount[i] = Random.Range(1, 2);
 				}
 			}
-			PL.OtherObj = GetComponent<Interactable>();
+			PL.InteractObj = GetComponent<Interactable>();
 			PL.InventoryRefresh();
 			GM.UIOpen(GM.UIObj.transform.Find("Inventory").gameObject);
 		}

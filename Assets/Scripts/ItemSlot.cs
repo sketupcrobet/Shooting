@@ -2,10 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.UI;
-using static Unity.Burst.Intrinsics.X86.Sse4_2;
+using UnityEngine.EventSystems;
 
-public class ItemSlot : MonoBehaviour
+public class ItemSlot : MonoBehaviour, IPointerEnterHandler
 {
 	private Player PL;
 
@@ -24,32 +23,32 @@ public class ItemSlot : MonoBehaviour
 		if (tag == "PlayerInventory")
 		{
 			bool isAdd = false;
-			if (!Input.GetKey(KeyCode.LeftShift))
+			if (Input.GetKey(KeyCode.LeftControl))
 			{
-				for (int i = 0; PL.OtherObj.InventoryCode.Length > i; i++)
+				for (int i = 0; PL.InteractObj.InventoryCode.Length > i; i++)
 				{
-					if (PL.OtherObj.InventoryCode[i] == PL.InventoryCode[int.Parse(name.Split("(")[1].Split(")")[0])])
+					if (PL.InteractObj.InventoryCode[i] == PL.InventoryCode[int.Parse(name.Split("(")[1].Split(")")[0])])
 					{
-						PL.OtherObj.InventoryCount[i] += PL.InventoryCount[int.Parse(name.Split("(")[1].Split(")")[0])];
+						PL.InteractObj.InventoryCount[i] += PL.InventoryCount[int.Parse(name.Split("(")[1].Split(")")[0])];
 						PL.InventoryCode[int.Parse(name.Split("(")[1].Split(")")[0])] = 0;
 						PL.InventoryCount[int.Parse(name.Split("(")[1].Split(")")[0])] = 0;
 						isAdd = true;
 						break;
 					}
 				}
-				for (int i = 0; PL.OtherObj.InventoryCode.Length > i && isAdd == false; i++)
+				for (int i = 0; PL.InteractObj.InventoryCode.Length > i && isAdd == false; i++)
 				{
-					if (PL.OtherObj.InventoryCode[i] == 0)
+					if (PL.InteractObj.InventoryCode[i] == 0)
 					{
-						PL.OtherObj.InventoryCode[i] = PL.InventoryCode[int.Parse(name.Split("(")[1].Split(")")[0])];
-						PL.OtherObj.InventoryCount[i] = PL.InventoryCount[int.Parse(name.Split("(")[1].Split(")")[0])];
+						PL.InteractObj.InventoryCode[i] = PL.InventoryCode[int.Parse(name.Split("(")[1].Split(")")[0])];
+						PL.InteractObj.InventoryCount[i] = PL.InventoryCount[int.Parse(name.Split("(")[1].Split(")")[0])];
 						PL.InventoryCode[int.Parse(name.Split("(")[1].Split(")")[0])] = 0;
 						PL.InventoryCount[int.Parse(name.Split("(")[1].Split(")")[0])] = 0;
 						break;
 					}
 				}
 			}
-			else
+			else if (Input.GetKey(KeyCode.LeftShift))
 			{
 				string itemType = Resources.Load("Item/" + PL.InventoryCode[int.Parse(name.Split("(")[1].Split(")")[0])]).GetComponent<Item>().itemType;
 				int startnum = 0;
@@ -78,15 +77,15 @@ public class ItemSlot : MonoBehaviour
 		else if (tag == "OtherInventory")
 		{
 			bool isAdd = false;
-			if (!Input.GetKey(KeyCode.LeftShift))
+			if (Input.GetKey(KeyCode.LeftControl))
 			{
 				for (int i = 0; PL.InventoryCode.Length > i; i++)
 				{
-					if (PL.InventoryCode[i] == PL.OtherObj.InventoryCode[int.Parse(name.Split("(")[1].Split(")")[0])])
+					if (PL.InventoryCode[i] == PL.InteractObj.InventoryCode[int.Parse(name.Split("(")[1].Split(")")[0])])
 					{
-						PL.InventoryCount[i] += PL.OtherObj.InventoryCount[int.Parse(name.Split("(")[1].Split(")")[0])];
-						PL.OtherObj.InventoryCode[int.Parse(name.Split("(")[1].Split(")")[0])] = 0;
-						PL.OtherObj.InventoryCount[int.Parse(name.Split("(")[1].Split(")")[0])] = 0;
+						PL.InventoryCount[i] += PL.InteractObj.InventoryCount[int.Parse(name.Split("(")[1].Split(")")[0])];
+						PL.InteractObj.InventoryCode[int.Parse(name.Split("(")[1].Split(")")[0])] = 0;
+						PL.InteractObj.InventoryCount[int.Parse(name.Split("(")[1].Split(")")[0])] = 0;
 						isAdd = true;
 						break;
 					}
@@ -95,17 +94,17 @@ public class ItemSlot : MonoBehaviour
 				{
 					if (PL.InventoryCode[i] == 0)
 					{
-						PL.InventoryCode[i] = PL.OtherObj.InventoryCode[int.Parse(name.Split("(")[1].Split(")")[0])];
-						PL.InventoryCount[i] = PL.OtherObj.InventoryCount[int.Parse(name.Split("(")[1].Split(")")[0])];
-						PL.OtherObj.InventoryCode[int.Parse(name.Split("(")[1].Split(")")[0])] = 0;
-						PL.OtherObj.InventoryCount[int.Parse(name.Split("(")[1].Split(")")[0])] = 0;
+						PL.InventoryCode[i] = PL.InteractObj.InventoryCode[int.Parse(name.Split("(")[1].Split(")")[0])];
+						PL.InventoryCount[i] = PL.InteractObj.InventoryCount[int.Parse(name.Split("(")[1].Split(")")[0])];
+						PL.InteractObj.InventoryCode[int.Parse(name.Split("(")[1].Split(")")[0])] = 0;
+						PL.InteractObj.InventoryCount[int.Parse(name.Split("(")[1].Split(")")[0])] = 0;
 						break;
 					}
 				}
 			}
-			else
+			else if (Input.GetKey(KeyCode.LeftShift))
 			{
-				string itemType = Resources.Load("Item/" + PL.OtherObj.InventoryCode[int.Parse(name.Split("(")[1].Split(")")[0])]).GetComponent<Item>().itemType;
+				string itemType = Resources.Load("Item/" + PL.InteractObj.InventoryCode[int.Parse(name.Split("(")[1].Split(")")[0])]).GetComponent<Item>().itemType;
 				int startnum = 0;
 				int maxnum = 0;
 				if (itemType == "Tool" || itemType == "Weapon")
@@ -122,8 +121,8 @@ public class ItemSlot : MonoBehaviour
 				{
 					if (PL.EquipCode[i] == 0)
 					{
-						PL.EquipCode[i] = PL.OtherObj.InventoryCode[int.Parse(name.Split("(")[1].Split(")")[0])];
-						PL.OtherObj.InventoryCount[int.Parse(name.Split("(")[1].Split(")")[0])] -= 1;
+						PL.EquipCode[i] = PL.InteractObj.InventoryCode[int.Parse(name.Split("(")[1].Split(")")[0])];
+						PL.InteractObj.InventoryCount[int.Parse(name.Split("(")[1].Split(")")[0])] -= 1;
 						break;
 					}
 				}
@@ -132,27 +131,59 @@ public class ItemSlot : MonoBehaviour
 		else if (tag == "EquipInventory")
 		{
 			bool isAdd = false;
-			for (int i = 0; PL.InventoryCode.Length > i; i++)
+			if (Input.GetKey(KeyCode.LeftControl))
 			{
-				if (PL.InventoryCode[i] == PL.EquipCode[int.Parse(name.Split("(")[1].Split(")")[0])])
+				for (int i = 0; PL.InventoryCode.Length > i; i++)
 				{
-					PL.InventoryCount[i] += 1;
-					PL.EquipCode[int.Parse(name.Split("(")[1].Split(")")[0])] = 0;
-					isAdd = true;
-					break;
+					if (PL.InventoryCode[i] == PL.EquipCode[int.Parse(name.Split("(")[1].Split(")")[0])])
+					{
+						PL.InventoryCount[i] += 1;
+						PL.EquipCode[int.Parse(name.Split("(")[1].Split(")")[0])] = 0;
+						isAdd = true;
+						break;
+					}
+				}
+				for (int i = 0; PL.InventoryCode.Length > i && isAdd == false; i++)
+				{
+					if (PL.InventoryCode[i] == 0)
+					{
+						PL.InventoryCode[i] = PL.EquipCode[int.Parse(name.Split("(")[1].Split(")")[0])];
+						PL.InventoryCount[i] = 1;
+						PL.EquipCode[int.Parse(name.Split("(")[1].Split(")")[0])] = 0;
+						break;
+					}
 				}
 			}
-			for (int i = 0; PL.InventoryCode.Length > i && isAdd == false; i++)
+			else if (Input.GetKey(KeyCode.LeftShift))
 			{
-				if (PL.InventoryCode[i] == 0)
+				for (int i = 0; PL.InteractObj.InventoryCode.Length > i; i++)
 				{
-					PL.InventoryCode[i] = PL.EquipCode[int.Parse(name.Split("(")[1].Split(")")[0])];
-					PL.InventoryCount[i] = 1;
-					PL.EquipCode[int.Parse(name.Split("(")[1].Split(")")[0])] = 0;
-					break;
+					if (PL.InteractObj.InventoryCode[i] == PL.EquipCode[int.Parse(name.Split("(")[1].Split(")")[0])])
+					{
+						PL.InteractObj.InventoryCount[i] += 1;
+						PL.EquipCode[int.Parse(name.Split("(")[1].Split(")")[0])] = 0;
+						isAdd = true;
+						break;
+					}
+				}
+				for (int i = 0; PL.InventoryCode.Length > i && isAdd == false; i++)
+				{
+					if (PL.InteractObj.InventoryCode[i] == 0)
+					{
+						PL.InteractObj.InventoryCode[i] = PL.EquipCode[int.Parse(name.Split("(")[1].Split(")")[0])];
+						PL.InteractObj.InventoryCount[i] = 1;
+						PL.EquipCode[int.Parse(name.Split("(")[1].Split(")")[0])] = 0;
+						break;
+					}
 				}
 			}
 		}
 		PL.InventoryRefresh();
+	}
+
+	public void OnPointerEnter(PointerEventData eventData)
+	{
+		Debug.Log(name);
+		PL.InventoryObj = GetComponent<ItemSlot>();
 	}
 }
