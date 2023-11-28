@@ -26,7 +26,6 @@ public class Interactable : MonoBehaviour
 	{
 		if (interactType == "PickAxe")
 		{
-			GM.havePickAxe = true;
 			if (PL.AddItem(1, 1))
 			{
 				Debug.Log(name + "¿ª(∏¶) »πµÊ«ﬂ¥Ÿ");
@@ -35,7 +34,6 @@ public class Interactable : MonoBehaviour
 		}
 		else if (interactType == "Axe")
 		{
-			GM.haveAxe = true;
 			if (PL.AddItem(2, 1))
 			{
 				Debug.Log(name + "¿ª(∏¶) »πµÊ«ﬂ¥Ÿ");
@@ -106,7 +104,7 @@ public class Interactable : MonoBehaviour
 
 	private bool Mine()
 	{
-		if (GM.havePickAxe == true)
+		if (PL.equipCode[PL.nowequip] == 1)
 		{
 			return true;
 		}
@@ -119,7 +117,7 @@ public class Interactable : MonoBehaviour
 
 	private bool Chop()
 	{
-		if (GM.haveAxe == true)
+		if (PL.equipCode[PL.nowequip] == 2)
 		{
 			return true;
 		}

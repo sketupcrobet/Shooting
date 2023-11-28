@@ -17,6 +17,8 @@ public class Player : MonoBehaviour
 	public int[] equipCode = new int[6];
 	public int[] hotbarCode = new int[10];
 
+	public int nowequip = 0;
+
 	[SerializeField] private WeaponData weaponData;
 	public Interactable interactObj;
 	public ItemSlot inventoryObj;
@@ -33,21 +35,93 @@ public class Player : MonoBehaviour
 		maxAmmo = weaponData.MaxAmmo;
 		nowAmmo = maxAmmo;
 		GM.UIObj.transform.Find("Ammo").GetComponent<TextMeshProUGUI>().text = nowAmmo.ToString() + "/" + maxAmmo.ToString();
+		inventoryObj = Resources.Load("Prefabs/ItemSlot").GetComponent<ItemSlot>();
 	}
 
 	void Update()
 	{
-		if (Input.GetKeyDown(KeyCode.Alpha1))
+		if (inventoryObj.isOver == true)
 		{
-			if (inventoryCode[int.Parse(inventoryObj.name.Split("(")[1].Split(")")[0])] != 0)
+			if (Input.GetKeyDown(KeyCode.Alpha1))
 			{
-				hotbarCode[0] = int.Parse(inventoryObj.name.Split("(")[1].Split(")")[0]) + 1;
+				if (inventoryCode[int.Parse(inventoryObj.name.Split("(")[1].Split(")")[0])] != 0)
+				{
+					hotbarCode[0] = int.Parse(inventoryObj.name.Split("(")[1].Split(")")[0]) + 1;
+				}
+				InventoryRefresh();
 			}
-			InventoryRefresh();
-		}
-		if (Input.GetKeyDown(KeyCode.Alpha2))
-		{
-
+			if (Input.GetKeyDown(KeyCode.Alpha2))
+			{
+				if (inventoryCode[int.Parse(inventoryObj.name.Split("(")[1].Split(")")[0])] != 0)
+				{
+					hotbarCode[1] = int.Parse(inventoryObj.name.Split("(")[1].Split(")")[0]) + 1;
+				}
+				InventoryRefresh();
+			}
+			if (Input.GetKeyDown(KeyCode.Alpha3))
+			{
+				if (inventoryCode[int.Parse(inventoryObj.name.Split("(")[1].Split(")")[0])] != 0)
+				{
+					hotbarCode[2] = int.Parse(inventoryObj.name.Split("(")[1].Split(")")[0]) + 1;
+				}
+				InventoryRefresh();
+			}
+			if (Input.GetKeyDown(KeyCode.Alpha4))
+			{
+				if (inventoryCode[int.Parse(inventoryObj.name.Split("(")[1].Split(")")[0])] != 0)
+				{
+					hotbarCode[3] = int.Parse(inventoryObj.name.Split("(")[1].Split(")")[0]) + 1;
+				}
+				InventoryRefresh();
+			}
+			if (Input.GetKeyDown(KeyCode.Alpha5))
+			{
+				if (inventoryCode[int.Parse(inventoryObj.name.Split("(")[1].Split(")")[0])] != 0)
+				{
+					hotbarCode[4] = int.Parse(inventoryObj.name.Split("(")[1].Split(")")[0]) + 1;
+				}
+				InventoryRefresh();
+			}
+			if (Input.GetKeyDown(KeyCode.Alpha6))
+			{
+				if (inventoryCode[int.Parse(inventoryObj.name.Split("(")[1].Split(")")[0])] != 0)
+				{
+					hotbarCode[5] = int.Parse(inventoryObj.name.Split("(")[1].Split(")")[0]) + 1;
+				}
+				InventoryRefresh();
+			}
+			if (Input.GetKeyDown(KeyCode.Alpha7))
+			{
+				if (inventoryCode[int.Parse(inventoryObj.name.Split("(")[1].Split(")")[0])] != 0)
+				{
+					hotbarCode[6] = int.Parse(inventoryObj.name.Split("(")[1].Split(")")[0]) + 1;
+				}
+				InventoryRefresh();
+			}
+			if (Input.GetKeyDown(KeyCode.Alpha8))
+			{
+				if (inventoryCode[int.Parse(inventoryObj.name.Split("(")[1].Split(")")[0])] != 0)
+				{
+					hotbarCode[7] = int.Parse(inventoryObj.name.Split("(")[1].Split(")")[0]) + 1;
+				}
+				InventoryRefresh();
+			}
+			if (Input.GetKeyDown(KeyCode.Alpha9))
+			{
+				if (inventoryCode[int.Parse(inventoryObj.name.Split("(")[1].Split(")")[0])] != 0)
+				{
+					hotbarCode[8] = int.Parse(inventoryObj.name.Split("(")[1].Split(")")[0]) + 1;
+				}
+				InventoryRefresh();
+			}
+			if (Input.GetKeyDown(KeyCode.Alpha0))
+			{
+				if (inventoryCode[int.Parse(inventoryObj.name.Split("(")[1].Split(")")[0])] != 0)
+				{
+					hotbarCode[9] = int.Parse(inventoryObj.name.Split("(")[1].Split(")")[0]) + 1;
+				}
+				InventoryRefresh();
+			}
 		}
 		if (!GM.isUIOpen)
 		{
@@ -72,6 +146,15 @@ public class Player : MonoBehaviour
 			if (Input.GetKeyDown(KeyCode.Escape))
 			{
 				GM.UIOpen(GM.UIObj.transform.Find("EscapeMenu").gameObject);
+			}
+			if (Input.GetKeyDown(KeyCode.Alpha1))
+			{
+				nowequip = 0;
+
+			}
+			if (Input.GetKeyDown(KeyCode.Alpha2))
+			{
+				nowequip = 1;
 			}
 		}
 		else
@@ -148,6 +231,12 @@ public class Player : MonoBehaviour
 		{
 			if (hotbarCode[i] != 0)
 			{
+				if (inventoryCount[hotbarCode[i] - 1] == 0)
+				{
+					hotbarCode[i] = 0;
+					GM.UIObj.transform.Find("Inventory").Find("Hotbar").GetChild(i).GetChild(0).GetComponent<Image>().sprite = Resources.Load("Item/0").GetComponent<Item>().itemIcon;
+					GM.UIObj.transform.Find("Inventory").Find("Hotbar").GetChild(i).GetChild(1).GetComponent<TextMeshProUGUI>().text = "";
+				}
 				GM.UIObj.transform.Find("Inventory").Find("Hotbar").GetChild(i).GetChild(0).GetComponent<Image>().sprite = Resources.Load("Item/" + inventoryCode[hotbarCode[i] - 1]).GetComponent<Item>().itemIcon;
 				GM.UIObj.transform.Find("Inventory").Find("Hotbar").GetChild(i).GetChild(1).GetComponent<TextMeshProUGUI>().text = inventoryCount[hotbarCode[i] - 1].ToString();
 			}

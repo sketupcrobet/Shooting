@@ -7,6 +7,7 @@ using UnityEngine.EventSystems;
 public class ItemSlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 {
 	private Player PL;
+	public bool isOver;
 
 	void Start()
 	{
@@ -183,11 +184,13 @@ public class ItemSlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 
 	public void OnPointerEnter(PointerEventData eventData)
 	{
+		isOver = true;
 		PL.inventoryObj = GetComponent<ItemSlot>();
 	}
 
 	public void OnPointerExit(PointerEventData eventData)
 	{
-		PL.inventoryObj = null;
+		isOver = false;
+		//PL.inventoryObj = null;
 	}
 }

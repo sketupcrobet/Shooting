@@ -8,9 +8,6 @@ public class GameManager : MonoBehaviour
 	public bool debugMod;
 	public bool isUIOpen;
 
-	public bool havePickAxe;
-	public bool haveAxe;
-
 	private float deltaTime = 0.0f;
 
 	public GameObject closeObj;
@@ -56,7 +53,6 @@ public class GameManager : MonoBehaviour
 		*/
 		UIObjList.SetActive(true);
 		closeObj = UIObjList.transform.Find("Close").gameObject;
-		//this.closeObj = closeObj;
 		isUIOpen = true;
 	}
 

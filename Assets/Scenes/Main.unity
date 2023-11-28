@@ -1325,8 +1325,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   interactType: Axe
-  InventoryCode: 
-  InventoryCount: 
+  inventoryCode: 
+  inventoryCount: 
 --- !u!212 &106415993
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -1623,8 +1623,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   interactType: Box
-  InventoryCode: 
-  InventoryCount: 
+  inventoryCode: 
+  inventoryCount: 
 --- !u!212 &113967062
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -4266,8 +4266,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   interactType: PickAxe
-  InventoryCode: 
-  InventoryCount: 
+  inventoryCode: 
+  inventoryCount: 
 --- !u!212 &461417278
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -7158,8 +7158,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   interactType: Craft
-  InventoryCode: 000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
-  InventoryCount: 000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+  inventoryCode: 
+  inventoryCount: 
 --- !u!212 &808520295
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -8116,8 +8116,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   interactType: Stone
-  InventoryCode: 
-  InventoryCount: 
+  inventoryCode: 
+  inventoryCount: 
 --- !u!212 &990604000
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -8295,8 +8295,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   interactType: Box
-  InventoryCode: 
-  InventoryCount: 
+  inventoryCode: 
+  inventoryCount: 
 --- !u!50 &998331619
 Rigidbody2D:
   serializedVersion: 4
@@ -8869,8 +8869,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   debugMod: 0
   isUIOpen: 0
-  havePickAxe: 0
-  haveAxe: 0
   closeObj: {fileID: 0}
   UIObj: {fileID: 0}
 --- !u!4 &1044767233
@@ -9606,7 +9604,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: -15
   m_Sprite: {fileID: 7482667652216324306, guid: 311925a002f4447b3a28927169b83ea6, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -9649,12 +9647,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   health: 100
   speed: 5
-  InventoryCode: 000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
-  InventoryCount: 000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
-  EquipCode: 000000000000000000000000000000000000000000000000
+  inventoryCode: 000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+  inventoryCount: 000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+  equipCode: 000000000000000000000000000000000000000000000000
+  hotbarCode: 00000000000000000000000000000000000000000000000000000000000000000000000000000000
+  nowequip: 0
   weaponData: {fileID: 3993402431058430438, guid: d53030756dc0d554788ee3086abd317e, type: 3}
-  InteractObj: {fileID: 0}
-  InventoryObj: {fileID: 0}
+  interactObj: {fileID: 0}
+  inventoryObj: {fileID: 0}
 --- !u!50 &1220834011
 Rigidbody2D:
   serializedVersion: 4
@@ -16844,8 +16844,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   interactType: Iron
-  InventoryCode: 
-  InventoryCount: 
+  inventoryCode: 
+  inventoryCount: 
 --- !u!212 &2042119548
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -18278,8 +18278,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   interactType: Wood
-  InventoryCode: 
-  InventoryCount: 
+  inventoryCode: 
+  inventoryCount: 
 --- !u!212 &2138029086
 SpriteRenderer:
   m_ObjectHideFlags: 0
